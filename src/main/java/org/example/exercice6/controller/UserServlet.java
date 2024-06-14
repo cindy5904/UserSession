@@ -31,6 +31,10 @@ public class UserServlet extends HttpServlet {
             case "/login":
                 formUser(req, resp);
                 break;
+            case "/logout":
+                logout(req, resp);
+                break;
+
             default:
                 resp.sendRedirect("erreur");
                 break;
@@ -39,18 +43,31 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
-        String name = req.getParameter("name");
         String password = req.getParameter("password");
-        User user = new User(email, name, password);
-        HttpSession session = req.getSession();
-        userService.saveUser(user);
-        req.setAttribute("users", userService);
-        resp.sendRedirect("productListe");
-    }
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + password);
+        User userLogin = userService.authenticate(email, password);
+        System.out.println("Authenticated User: " + userLogin);
+
+        if (userLogin != null) {
+            HttpSession session = req.getSession();
+            session.setAttribute("userLogin", userLogin);
+            resp.sendRedirect("productList");
+        } else {
+            req.setAttribute("erreur", "mot passe ou email invzlide");
+            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
+        }
+        }
+
+
     private void formUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = new User();
-        req.setAttribute("user", user);
         req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
+    }
+
+    private void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        session.invalidate();
+        resp.sendRedirect("login");
     }
 
 

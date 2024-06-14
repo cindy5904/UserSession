@@ -18,7 +18,7 @@ public abstract class BaseRepository <T>{
         session.update(o);
     }
 
-    public void delate(T o){
+    public void delete(T o){
         session.delete(o);
     }
 

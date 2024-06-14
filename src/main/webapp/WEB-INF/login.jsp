@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="user" type="org.example.exercice6.model.User" scope="request"/>
+<%--<jsp:useBean id="userLogin" type="org.example.exercice6.model.User" scope="request"/>--%>
 <html>
 <head>
     <title>Title</title>
@@ -24,10 +24,6 @@
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input type="text" name="email" id="email" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nom:</label>
-                    <input type="text" name="name" id="name" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password:</label>

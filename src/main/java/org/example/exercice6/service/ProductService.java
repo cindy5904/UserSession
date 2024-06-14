@@ -6,6 +6,7 @@ import org.example.exercice6.repository.ProductRepository;
 import org.example.exercice6.repository.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,16 +44,24 @@ public class ProductService {
     }
 
     public List<Product> getProducts(){
-        List<Product> products = null;
         session = sessionFactory.openSession();
-        productRepository = new ProductRepository(session);
-        try {
-            products = productRepository.findAll();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }finally {
-            session.close();
-        }
+        List<Product> products = session.createQuery("from Product ", Product.class).list();
+        session.close();
         return products;
+}
+    public boolean updateProduct(Product o) {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(o);
+        session.getTransaction().commit();
+        session.close();
+        return true;
+
+    }
+
+    public void deleteProduct(Product product) {
+        session = sessionFactory.openSession();
+        productRepository.delete(product);
+        session.close();
     }
 }

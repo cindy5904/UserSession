@@ -12,12 +12,27 @@ public class ProductRepository extends BaseRepository<Product> {
     }
 
     @Override
+    public void create(Product product) {
+        session.save(product); // Ou session.persist(product) pour une insertion
+    }
+
+    @Override
+    public void update(Product product) {
+        session.update(product);
+    }
+
+    @Override
+    public void delete(Product product) {
+        session.delete(product);
+    }
+
+    @Override
     public Product findById(int id) {
-        return session.get(Product.class,id);
+        return session.get(Product.class, id);
     }
 
     @Override
     public List<Product> findAll() {
-        return session.createQuery("from Product").list();
+        return session.createQuery("from Product", Product.class).list();
     }
 }

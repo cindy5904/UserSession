@@ -44,18 +44,36 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String marque = req.getParameter("marque");
-        String reference = req.getParameter("reference");
-        LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
-        double prix = Double.parseDouble(req.getParameter("prix"));
-        int stock = Integer.parseInt(req.getParameter("stock"));
+        String idStr = req.getParameter("id");
+        if (idStr != null && !idStr.isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            String marque = req.getParameter("marque");
+            String reference = req.getParameter("reference");
+            LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
+            double prix = Double.parseDouble(req.getParameter("prix"));
+            int stock = Integer.parseInt(req.getParameter("stock"));
 
-        Product product = new Product(marque, reference, dateAchat, prix, stock);
-        productService.createProduct(product);
-        req.setAttribute("product", productService);
+            Product product = new Product( marque, reference, dateAchat, prix, stock);
+            productService.updateProduct(product);
+        } else {
+
+            String marque = req.getParameter("marque");
+            String reference = req.getParameter("reference");
+            LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
+            double prix = Double.parseDouble(req.getParameter("prix"));
+            int stock = Integer.parseInt(req.getParameter("stock"));
+
+            Product product = new Product(marque, reference, dateAchat, prix, stock);
+            productService.createProduct(product);
+        }
+
         resp.sendRedirect("productList");
     }
-    private void updateProduct(HttpServletRequest req, HttpServletResponse resp) {
+    private void updateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Product product = productService.getProduct(id);
+        req.setAttribute("product", product);
+        req.getRequestDispatcher("/WEB-INF/formUpdateProduct.jsp").forward(req, resp);
     }
 
     private void formProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
