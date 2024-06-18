@@ -17,6 +17,8 @@ public class Product {
     private LocalDate dateAchat;
     private double prix;
     private int stock;
+    private String url;
+
 
     public Product(String marque, String reference, LocalDate dateAchat, double prix, int stock) {
         this.marque = marque;
@@ -26,7 +28,24 @@ public class Product {
         this.stock = stock;
     }
 
+    public Product(String marque, String reference, LocalDate dateAchat, double prix, int stock, String url) {
+        this.marque = marque;
+        this.reference = reference;
+        this.dateAchat = dateAchat;
+        this.prix = prix;
+        this.stock = stock;
+        this.url = url;
+    }
+
     public Product() {
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getId() {

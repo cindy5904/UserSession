@@ -26,6 +26,7 @@
             <thead>
             <tr>
                 <th>#</th>
+                <th>Image</th>
                 <th>Marque</th>
                 <th>Référence</th>
                 <th>Date d'Achat</th>
@@ -37,6 +38,9 @@
             <% for (Product p : products ) { %>
             <tr>
                 <td><%= p.getId() %></td>
+                <td>
+                    <img src="<%= p.getUrl() %>" alt="Image du produit" style="max-width: 100px; max-height: 100px;">
+                </td>
                 <td><%= p.getMarque() %></td>
                 <td><%= p.getReference() %></td>
                 <td><%= p.getDateAchat() %></td>

@@ -1,18 +1,22 @@
 package org.example.exercice6.controller;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.example.exercice6.model.Product;
 import org.example.exercice6.service.ProductService;
 import org.example.exercice6.util.HibernateSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
+@MultipartConfig(maxFileSize = 1024*1024*10)
 @WebServlet(name="product", value= {"/productList", "/productForm", "/productUpdate"})
 public class ProductServlet extends HttpServlet {
         private ProductService productService;
@@ -39,36 +43,43 @@ public class ProductServlet extends HttpServlet {
                 resp.sendRedirect("erreur");
                 break;
         }
+
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idStr = req.getParameter("id");
-        if (idStr != null && !idStr.isEmpty()) {
-            int id = Integer.parseInt(idStr);
-            String marque = req.getParameter("marque");
-            String reference = req.getParameter("reference");
-            LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
-            double prix = Double.parseDouble(req.getParameter("prix"));
-            int stock = Integer.parseInt(req.getParameter("stock"));
+        String marque = req.getParameter("marque");
+        String reference = req.getParameter("reference");
+        LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
+        double prix = Double.parseDouble(req.getParameter("prix"));
+        int stock = Integer.parseInt(req.getParameter("stock"));
 
-            Product product = new Product( marque, reference, dateAchat, prix, stock);
+        String uploadPath = getServletContext().getRealPath("/") + "image";
+        File file = new File(uploadPath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        Part image = req.getPart("image");
+        String fileName = image.getSubmittedFileName();
+        image.write(uploadPath + File.separator + fileName);
+
+        String imageUrl = req.getContextPath() + "/image/" + fileName;
+
+        if (idStr != null && !idStr.isEmpty()) {
+
+            Product product = new Product( marque, reference, dateAchat, prix, stock, imageUrl);
             productService.updateProduct(product);
         } else {
-
-            String marque = req.getParameter("marque");
-            String reference = req.getParameter("reference");
-            LocalDate dateAchat = LocalDate.parse(req.getParameter("dateAchat"));
-            double prix = Double.parseDouble(req.getParameter("prix"));
-            int stock = Integer.parseInt(req.getParameter("stock"));
-
-            Product product = new Product(marque, reference, dateAchat, prix, stock);
+            Product product = new Product(marque, reference, dateAchat, prix, stock, imageUrl);
             productService.createProduct(product);
         }
 
         resp.sendRedirect("productList");
     }
+
     private void updateProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.getProduct(id);

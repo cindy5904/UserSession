@@ -20,7 +20,7 @@
         <div class="col-8 offset-2 p-3 rounded text-bg-dark">
             <h1 class="fw-light">Ajouter un produit</h1>
             <hr>
-            <form action="productForm" method="post">
+            <form action="productForm" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="marque" class="form-label">Marque:</label>
                     <input type="text" name="marque" id="marque" class="form-control">
@@ -42,6 +42,12 @@
                     <input type="text" name="stock" id="stock" class="form-control">
                 </div>
 
+                <div class = "mb-3">
+                <input type="file" name="image">
+        </div>
+        <div>
+
+        </div>
                 <hr>
                 <div class="text-end">
 
